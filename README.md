@@ -451,13 +451,6 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - [x] Responsive design
 - [x] Data persistence (localStorage)
 
-### **🔄 Đang phát triển**
-- [ ] Kết nối database thật
-- [ ] Quản lý tác giả
-- [ ] Quản lý thể loại
-- [ ] Báo cáo chi tiết
-- [ ] Notification system
-- [ ] Advanced search & filters
 
 ## 🛠️ Technologies Stack
 
