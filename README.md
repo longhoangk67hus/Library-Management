@@ -198,7 +198,6 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - **Responsive Design** - Mobile-friendly
 
 ### **Development Tools**
-- **Visual Studio 2022** - IDE
 - **VS Code** - Code Editor
 - **Postman** - API Testing
 - **Git** - Version Control
