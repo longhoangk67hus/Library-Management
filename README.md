@@ -1,6 +1,6 @@
 # 📚 Library Management System
 
-Hệ thống quản lý thư viện hiện đại được xây dựng với .NET Core Web API và React.js, hỗ trợ quản lý sách, người dùng, và các hoạt động mượn/trả sách.
+Hệ thống quản lý thư viện hiện đại được xây dựng với .NET Core Web API và ReactJS, hỗ trợ quản lý sách, người dùng, và các hoạt động mượn/trả sách.
 
 ## Kiến trúc hệ thống
 
