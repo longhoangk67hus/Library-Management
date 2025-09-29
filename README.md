@@ -474,10 +474,6 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - **Postman** - API Testing
 - **Git** - Version Control
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 👥 Contributors
 
 - **Hoàng Ngọc Long**
