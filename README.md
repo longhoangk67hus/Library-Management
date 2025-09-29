@@ -94,43 +94,13 @@ src/
 
 ### **Entity Relationship Diagram**
 
-```
-┌─────────────────────┐         ┌─────────────────────┐         ┌─────────────────────┐
-│        USER         │         │    BORROW_RECORD    │         │        BOOK         │
-├─────────────────────┤         ├─────────────────────┤         ├─────────────────────┤
-│ Id (PK)            │◄────────┤ Id (PK)            │────────►│ Id (PK)            │
-│ Username (UK)      │    1    │ UserId (FK)        │    1    │ Title              │
-│ Password           │         │ BookId (FK)        │         │ Author             │
-│ FullName           │         │ BorrowDate         │         │ Category           │
-│ Email              │         │ DueDate            │         │ PublishYear        │
-│ Phone              │         │ ReturnDate         │         │ Publisher          │
-│ Role               │         │ Status             │         │ TotalCopies        │
-│ CreatedAt          │         │ Notes              │         │ AvailableCopies    │
-│ UpdatedAt          │         │ CreatedAt          │         │ Description        │
-└─────────────────────┘         └─────────────────────┘         │ CreatedAt          │
-                                                                │ UpdatedAt          │
-                                                                └─────────────────────┘
-                                                                         ▲
-                                                                         │
-                                                                         │ 1:N
-                                                                         │
-┌─────────────────────┐                                         ┌─────────────────────┐
-│       AUTHOR        │                                         │      CATEGORY       │
-├─────────────────────┤                                         ├─────────────────────┤
-│ Id (PK)            │─────────────────────────────────────────►│ Id (PK)            │
-│ Name               │                    1:N                   │ Name               │
-│ Biography          │                                          │ Description        │
-│ BirthDate          │                                          │ CreatedAt          │
-│ Nationality        │                                          └─────────────────────┘
-│ CreatedAt          │
-└─────────────────────┘
+![Database Diagram](./docs/DatabaseDiagram.svg)
 
-Relationships:
+**Mối quan hệ:**
 • USER (1) ──── (N) BORROW_RECORD: Một user có thể mượn nhiều sách
 • BOOK (1) ──── (N) BORROW_RECORD: Một sách có thể được mượn nhiều lần
 • AUTHOR (1) ──── (N) BOOK: Một tác giả có thể viết nhiều sách  
 • CATEGORY (1) ──── (N) BOOK: Một thể loại có thể có nhiều sách
-```
 ```
 
 ### **Database Schema Details**
@@ -168,104 +138,6 @@ Relationships:
 | DueDate | datetime | Not Null | Ngày hạn trả |
 | ReturnDate | datetime | Nullable | Ngày trả thực tế |
 | Status | nvarchar(20) | Default: 'Borrowed' | Trạng thái |
-
-## Sơ đồ lớp (Class Diagram)
-
-### **Backend Classes**
-
-```
-                    ┌─────────────────────────┐
-                    │   <<interface>>         │
-                    │     IBaseBL<T>         │
-                    ├─────────────────────────┤
-                    │ + GetAllAsync()        │
-                    │ + GetByIdAsync()       │
-                    │ + CreateAsync()        │
-                    │ + UpdateAsync()        │
-                    │ + DeleteAsync()        │
-                    └─────────────────────────┘
-                                ▲
-                                │ implements
-                                │
-                    ┌─────────────────────────┐
-                    │   <<abstract>>          │
-                    │     BaseBL<T>          │
-                    ├─────────────────────────┤
-                    │ # _baseDL: IBaseDL<T>  │
-                    │ + GetAllAsync()        │
-                    │ + GetByIdAsync()       │
-                    │ + CreateAsync()        │
-                    │ + UpdateAsync()        │
-                    │ + DeleteAsync()        │
-                    └─────────────────────────┘
-                                ▲
-                ┌───────────────┼───────────────┐
-                │               │               │
-    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
-    │     BookBL      │ │     AuthBL      │ │   BorrowRecordBL    │
-    ├─────────────────┤ ├─────────────────┤ ├─────────────────────┤
-    │ + GetByCategory │ │ + Login()       │ │ + BorrowBook()      │
-    │ + SearchBooks() │ │ + Register()    │ │ + ReturnBook()      │
-    │ + UpdateCopies()│ │ + ValidateToken │ │ + GetUserBorrows()  │
-    └─────────────────┘ └─────────────────┘ └─────────────────────┘
-             │                   │                       │
-             ▼                   ▼                       ▼
-    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
-    │      Book       │ │      User       │ │   BorrowRecord      │
-    ├─────────────────┤ ├─────────────────┤ ├─────────────────────┤
-    │ + Id            │ │ + Id            │ │ + Id                │
-    │ + Title         │ │ + Username      │ │ + UserId            │
-    │ + Author        │ │ + Password      │ │ + BookId            │
-    │ + Category      │ │ + FullName      │ │ + BorrowDate        │
-    │ + PublishYear   │ │ + Email         │ │ + DueDate           │
-    │ + TotalCopies   │ │ + Role          │ │ + ReturnDate        │
-    │ + AvailableCopies│ └─────────────────┘ │ + Status            │
-    └─────────────────┘                     └─────────────────────┘
-```
-
-### **Frontend Components**
-
-```
-                         ┌─────────────────────────┐
-                         │          App            │
-                         ├─────────────────────────┤
-                         │ + state: AuthState     │
-                         │ + renderCurrentPage()  │
-                         │ + handleLogin()        │
-                         │ + handleLogout()       │
-                         └─────────────────────────┘
-                                      │
-                    ┌─────────────────┼─────────────────┐
-                    ▼                 ▼                 ▼
-        ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-        │     Layout      │  │   Dashboard     │  │   LoginPage     │
-        ├─────────────────┤  ├─────────────────┤  ├─────────────────┤
-        │ + props: user   │  │ + props: role   │  │ + state: form   │
-        │ + renderHeader()│  │ + loadStats()   │  │ + handleLogin() │
-        │ + renderSidebar │  │ + quickActions()│  │ + handleRegister│
-        └─────────────────┘  └─────────────────┘  │ + validateForm()│
-                │                                  └─────────────────┘
-      ┌─────────┼─────────┐
-      ▼         ▼         ▼
-┌──────────┐ ┌──────────┐ ┌──────────────────┐
-│  Header  │ │ Sidebar  │ │ BooksManagement  │
-│          │ │          │ ├──────────────────┤
-└──────────┘ └──────────┘ │ + state: books   │
-                          │ + loadBooks()    │
-                          │ + handleCRUD()   │
-                          │ + filterBooks()  │
-                          └──────────────────┘
-                                   │
-                          ┌────────▼────────┐
-                          │  BorrowReturn   │
-                          ├─────────────────┤
-                          │ + borrowRecords │
-                          │ + handleBorrow()│
-                          │ + handleReturn()│
-                          │ + loadRecords() │
-                          └─────────────────┘
-```
-```
 
 ## Hệ thống phân quyền
 
