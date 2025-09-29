@@ -72,7 +72,7 @@ const ApiTestComponent = () => {
 
   // Test Auth API (this will likely fail unless backend is running)
   const testLogin = () => {
-    const loginRequest = createLoginRequest('testuser', 'testpassword');
+    const loginRequest = createLoginRequest('admin', '123456');
     runTest('login', () => api.auth.login(loginRequest));
   };
 
