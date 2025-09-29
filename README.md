@@ -6,7 +6,10 @@ Hệ thống quản lý thư viện hiện đại được xây dựng với .NE
 
 ### **Tổng quan Architecture**
 Hệ thống được thiết kế theo mô hình **Layered Architecture** với 4 tầng chính:
-![System Architecture](./docs/Layer.svg)
+
+<p align="center">
+  <img src="./docs/Layer.svg" alt="System Architecture" />
+</p>
 
 ### **Backend Architecture (.NET Core)**
 
