@@ -183,28 +183,6 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - [x] Responsive design
 - [x] Data persistence (localStorage)
 
-
-## Technologies Stack
-
-### **Backend**
-- **.NET Core 8.0** - Web API Framework
-- **Entity Framework Core** - ORM
-- **SQL Server** - Database
-- **JWT Authentication** - Security
-- **Swagger** - API Documentation
-
-### **Frontend**
-- **React.js 18** - UI Framework
-- **JavaScript (ES6+)** - Programming Language
-- **CSS3** - Styling
-- **LocalStorage** - Client-side Storage
-- **Responsive Design** - Mobile-friendly
-
-### **Development Tools**
-- **VS Code** - Code Editor
-- **Postman** - API Testing
-- **Git** - Version Control
-
 ## Contributors
 
 - **Hoàng Ngọc Long**
