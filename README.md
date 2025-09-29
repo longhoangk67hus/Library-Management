@@ -94,66 +94,43 @@ src/
 
 ### **Entity Relationship Diagram**
 
-```mermaid
-erDiagram
-    USER {
-        int Id PK
-        string Username UK
-        string Password
-        string FullName
-        string Email
-        string Phone
-        string Role
-        datetime CreatedAt
-        datetime UpdatedAt
-    }
-    
-    BOOK {
-        int Id PK
-        string Title
-        string Author
-        string Category
-        int PublishYear
-        string Publisher
-        int TotalCopies
-        int AvailableCopies
-        string Description
-        datetime CreatedAt
-        datetime UpdatedAt
-    }
-    
-    BORROW_RECORD {
-        int Id PK
-        int UserId FK
-        int BookId FK
-        datetime BorrowDate
-        datetime DueDate
-        datetime ReturnDate
-        string Status
-        string Notes
-        datetime CreatedAt
-    }
-    
-    AUTHOR {
-        int Id PK
-        string Name
-        string Biography
-        datetime BirthDate
-        string Nationality
-        datetime CreatedAt
-    }
-    
-    CATEGORY {
-        int Id PK
-        string Name
-        string Description
-        datetime CreatedAt
-    }
-    
-    USER ||--o{ BORROW_RECORD : "borrows"
-    BOOK ||--o{ BORROW_RECORD : "is borrowed"
-    BOOK }o--|| AUTHOR : "written by"
-    BOOK }o--|| CATEGORY : "belongs to"
+```
+┌─────────────────────┐         ┌─────────────────────┐         ┌─────────────────────┐
+│        USER         │         │    BORROW_RECORD    │         │        BOOK         │
+├─────────────────────┤         ├─────────────────────┤         ├─────────────────────┤
+│ Id (PK)            │◄────────┤ Id (PK)            │────────►│ Id (PK)            │
+│ Username (UK)      │    1    │ UserId (FK)        │    1    │ Title              │
+│ Password           │         │ BookId (FK)        │         │ Author             │
+│ FullName           │         │ BorrowDate         │         │ Category           │
+│ Email              │         │ DueDate            │         │ PublishYear        │
+│ Phone              │         │ ReturnDate         │         │ Publisher          │
+│ Role               │         │ Status             │         │ TotalCopies        │
+│ CreatedAt          │         │ Notes              │         │ AvailableCopies    │
+│ UpdatedAt          │         │ CreatedAt          │         │ Description        │
+└─────────────────────┘         └─────────────────────┘         │ CreatedAt          │
+                                                                │ UpdatedAt          │
+                                                                └─────────────────────┘
+                                                                         ▲
+                                                                         │
+                                                                         │ 1:N
+                                                                         │
+┌─────────────────────┐                                         ┌─────────────────────┐
+│       AUTHOR        │                                         │      CATEGORY       │
+├─────────────────────┤                                         ├─────────────────────┤
+│ Id (PK)            │─────────────────────────────────────────►│ Id (PK)            │
+│ Name               │                    1:N                   │ Name               │
+│ Biography          │                                          │ Description        │
+│ BirthDate          │                                          │ CreatedAt          │
+│ Nationality        │                                          └─────────────────────┘
+│ CreatedAt          │
+└─────────────────────┘
+
+Relationships:
+• USER (1) ──── (N) BORROW_RECORD: Một user có thể mượn nhiều sách
+• BOOK (1) ──── (N) BORROW_RECORD: Một sách có thể được mượn nhiều lần
+• AUTHOR (1) ──── (N) BOOK: Một tác giả có thể viết nhiều sách  
+• CATEGORY (1) ──── (N) BOOK: Một thể loại có thể có nhiều sách
+```
 ```
 
 ### **Database Schema Details**
@@ -196,136 +173,98 @@ erDiagram
 
 ### **Backend Classes**
 
-```mermaid
-classDiagram
-    class IBaseBL~T~ {
-        <<interface>>
-        +GetAllAsync() Task~IEnumerable~T~~
-        +GetByIdAsync(id) Task~T~
-        +CreateAsync(entity) Task~T~
-        +UpdateAsync(entity) Task~T~
-        +DeleteAsync(id) Task~bool~
-    }
-    
-    class BaseBL~T~ {
-        <<abstract>>
-        #_baseDL IBaseDL~T~
-        +GetAllAsync() Task~IEnumerable~T~~
-        +GetByIdAsync(id) Task~T~
-        +CreateAsync(entity) Task~T~
-        +UpdateAsync(entity) Task~T~
-        +DeleteAsync(id) Task~bool~
-    }
-    
-    class BookBL {
-        +GetBooksByCategory(category) Task~IEnumerable~Book~~
-        +SearchBooks(keyword) Task~IEnumerable~Book~~
-        +UpdateAvailableCopies(bookId, copies) Task~bool~
-    }
-    
-    class AuthBL {
-        +Login(request) Task~LoginResponse~
-        +Register(user) Task~RegisterResponse~
-        +ValidateToken(token) Task~bool~
-    }
-    
-    class BorrowRecordBL {
-        +BorrowBook(userId, bookId) Task~BorrowRecord~
-        +ReturnBook(recordId) Task~bool~
-        +GetUserBorrows(userId) Task~IEnumerable~BorrowRecord~~
-    }
-    
-    class Book {
-        +Id int
-        +Title string
-        +Author string
-        +Category string
-        +PublishYear int
-        +TotalCopies int
-        +AvailableCopies int
-    }
-    
-    class User {
-        +Id int
-        +Username string
-        +Password string
-        +FullName string
-        +Email string
-        +Role string
-    }
-    
-    class BorrowRecord {
-        +Id int
-        +UserId int
-        +BookId int
-        +BorrowDate DateTime
-        +DueDate DateTime
-        +ReturnDate DateTime?
-        +Status string
-    }
-    
-    IBaseBL~T~ <|.. BaseBL~T~
-    BaseBL~T~ <|-- BookBL
-    BaseBL~T~ <|-- AuthBL
-    BaseBL~T~ <|-- BorrowRecordBL
-    
-    BookBL --> Book
-    AuthBL --> User
-    BorrowRecordBL --> BorrowRecord
+```
+                    ┌─────────────────────────┐
+                    │   <<interface>>         │
+                    │     IBaseBL<T>         │
+                    ├─────────────────────────┤
+                    │ + GetAllAsync()        │
+                    │ + GetByIdAsync()       │
+                    │ + CreateAsync()        │
+                    │ + UpdateAsync()        │
+                    │ + DeleteAsync()        │
+                    └─────────────────────────┘
+                                ▲
+                                │ implements
+                                │
+                    ┌─────────────────────────┐
+                    │   <<abstract>>          │
+                    │     BaseBL<T>          │
+                    ├─────────────────────────┤
+                    │ # _baseDL: IBaseDL<T>  │
+                    │ + GetAllAsync()        │
+                    │ + GetByIdAsync()       │
+                    │ + CreateAsync()        │
+                    │ + UpdateAsync()        │
+                    │ + DeleteAsync()        │
+                    └─────────────────────────┘
+                                ▲
+                ┌───────────────┼───────────────┐
+                │               │               │
+    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
+    │     BookBL      │ │     AuthBL      │ │   BorrowRecordBL    │
+    ├─────────────────┤ ├─────────────────┤ ├─────────────────────┤
+    │ + GetByCategory │ │ + Login()       │ │ + BorrowBook()      │
+    │ + SearchBooks() │ │ + Register()    │ │ + ReturnBook()      │
+    │ + UpdateCopies()│ │ + ValidateToken │ │ + GetUserBorrows()  │
+    └─────────────────┘ └─────────────────┘ └─────────────────────┘
+             │                   │                       │
+             ▼                   ▼                       ▼
+    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
+    │      Book       │ │      User       │ │   BorrowRecord      │
+    ├─────────────────┤ ├─────────────────┤ ├─────────────────────┤
+    │ + Id            │ │ + Id            │ │ + Id                │
+    │ + Title         │ │ + Username      │ │ + UserId            │
+    │ + Author        │ │ + Password      │ │ + BookId            │
+    │ + Category      │ │ + FullName      │ │ + BorrowDate        │
+    │ + PublishYear   │ │ + Email         │ │ + DueDate           │
+    │ + TotalCopies   │ │ + Role          │ │ + ReturnDate        │
+    │ + AvailableCopies│ └─────────────────┘ │ + Status            │
+    └─────────────────┘                     └─────────────────────┘
 ```
 
 ### **Frontend Components**
 
-```mermaid
-classDiagram
-    class App {
-        +state: AuthState
-        +renderCurrentPage()
-        +handleLogin()
-        +handleLogout()
-    }
-    
-    class Layout {
-        +props: user, role
-        +renderHeader()
-        +renderSidebar()
-    }
-    
-    class Dashboard {
-        +props: userRole
-        +loadStatistics()
-        +renderQuickActions()
-    }
-    
-    class BooksManagement {
-        +state: books, filters
-        +loadBooks()
-        +handleCRUD()
-        +filterBooks()
-    }
-    
-    class BorrowReturn {
-        +state: borrowRecords
-        +handleBorrow()
-        +handleReturn()
-        +loadRecords()
-    }
-    
-    class LoginPage {
-        +state: formData, errors
-        +handleLogin()
-        +handleRegister()
-        +validateForm()
-    }
-    
-    App --> Layout
-    App --> Dashboard
-    App --> BooksManagement
-    App --> BorrowReturn
-    App --> LoginPage
-    
-    Layout --> Header
-    Layout --> Sidebar
+```
+                         ┌─────────────────────────┐
+                         │          App            │
+                         ├─────────────────────────┤
+                         │ + state: AuthState     │
+                         │ + renderCurrentPage()  │
+                         │ + handleLogin()        │
+                         │ + handleLogout()       │
+                         └─────────────────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                 ▼
+        ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+        │     Layout      │  │   Dashboard     │  │   LoginPage     │
+        ├─────────────────┤  ├─────────────────┤  ├─────────────────┤
+        │ + props: user   │  │ + props: role   │  │ + state: form   │
+        │ + renderHeader()│  │ + loadStats()   │  │ + handleLogin() │
+        │ + renderSidebar │  │ + quickActions()│  │ + handleRegister│
+        └─────────────────┘  └─────────────────┘  │ + validateForm()│
+                │                                  └─────────────────┘
+      ┌─────────┼─────────┐
+      ▼         ▼         ▼
+┌──────────┐ ┌──────────┐ ┌──────────────────┐
+│  Header  │ │ Sidebar  │ │ BooksManagement  │
+│          │ │          │ ├──────────────────┤
+└──────────┘ └──────────┘ │ + state: books   │
+                          │ + loadBooks()    │
+                          │ + handleCRUD()   │
+                          │ + filterBooks()  │
+                          └──────────────────┘
+                                   │
+                          ┌────────▼────────┐
+                          │  BorrowReturn   │
+                          ├─────────────────┤
+                          │ + borrowRecords │
+                          │ + handleBorrow()│
+                          │ + handleReturn()│
+                          │ + loadRecords() │
+                          └─────────────────┘
+```
 ```
 
 ## Hệ thống phân quyền
