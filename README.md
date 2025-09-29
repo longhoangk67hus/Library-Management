@@ -477,7 +477,7 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 ## Contributors
 
 - **Hoàng Ngọc Long**
-- **Email**: longhoangk67@gmail.com
+- **Email**: hoangngoclong.dev@gmail.com
 - **GitHub**: [@longhoangk67hus](https://github.com/longhoangk67hus)
 
 ---
