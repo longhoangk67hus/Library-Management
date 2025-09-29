@@ -2,7 +2,7 @@
 
 Hệ thống quản lý thư viện hiện đại được xây dựng với .NET Core Web API và React.js, hỗ trợ quản lý sách, người dùng, và các hoạt động mượn/trả sách.
 
-## 🏗️ Kiến trúc hệ thống
+## Kiến trúc hệ thống
 
 ### **Tổng quan Architecture**
 Hệ thống được thiết kế theo mô hình **Layered Architecture** với các thành phần:
@@ -90,7 +90,7 @@ src/
 - **Local Storage**: Data persistence
 - **Context API**: User authentication state
 
-## 🗃️ Sơ đồ cơ sở dữ liệu
+## Sơ đồ cơ sở dữ liệu
 
 ### **Entity Relationship Diagram**
 
@@ -192,7 +192,7 @@ erDiagram
 | ReturnDate | datetime | Nullable | Ngày trả thực tế |
 | Status | nvarchar(20) | Default: 'Borrowed' | Trạng thái |
 
-## 🏛️ Sơ đồ lớp (Class Diagram)
+## Sơ đồ lớp (Class Diagram)
 
 ### **Backend Classes**
 
@@ -328,7 +328,7 @@ classDiagram
     Layout --> Sidebar
 ```
 
-## 🔐 Hệ thống phân quyền
+## Hệ thống phân quyền
 
 ### **Roles & Permissions**
 
@@ -342,7 +342,7 @@ classDiagram
 [User Login] → [Validate Credentials] → [Generate JWT Token] → [Store in LocalStorage] → [Access Protected Routes]
 ```
 
-## 🚀 Hướng dẫn chạy chương trình
+## Hướng dẫn chạy chương trình
 
 ### **Yêu cầu hệ thống**
 - **.NET Core 8.0** hoặc mới hơn
@@ -440,7 +440,7 @@ POST   /api/v1/BorrowRecords      # Borrow a book
 PUT    /api/v1/BorrowRecords/{id} # Return a book
 ```
 
-## 🎯 Tính năng chính
+## Tính năng chính
 
 ### **✅ Đã hoàn thành**
 - [x] Hệ thống đăng nhập/đăng ký
@@ -452,7 +452,7 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - [x] Data persistence (localStorage)
 
 
-## 🛠️ Technologies Stack
+## Technologies Stack
 
 ### **Backend**
 - **.NET Core 8.0** - Web API Framework
@@ -474,7 +474,7 @@ PUT    /api/v1/BorrowRecords/{id} # Return a book
 - **Postman** - API Testing
 - **Git** - Version Control
 
-## 👥 Contributors
+## Contributors
 
 - **Hoàng Ngọc Long**
 - **Email**: longhoangk67@gmail.com
