@@ -96,57 +96,6 @@ src/
 
 ![Database Diagram](./docs/DatabaseDiagram.svg)
 
-**Mối quan hệ:**
-• USER (1) ──── (N) BORROW_RECORD: Một user có thể mượn nhiều sách
-• BOOK (1) ──── (N) BORROW_RECORD: Một sách có thể được mượn nhiều lần
-• AUTHOR (1) ──── (N) BOOK: Một tác giả có thể viết nhiều sách  
-• CATEGORY (1) ──── (N) BOOK: Một thể loại có thể có nhiều sách
-```
-
-### **Database Schema Details**
-
-#### **Users Table**
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| Id | int | PK, Identity | Khóa chính |
-| Username | nvarchar(50) | Unique, Not Null | Tên đăng nhập |
-| Password | nvarchar(255) | Not Null | Mật khẩu (đã hash) |
-| FullName | nvarchar(100) | Not Null | Họ tên đầy đủ |
-| Email | nvarchar(100) | Unique | Email |
-| Phone | nvarchar(20) | | Số điện thoại |
-| Role | nvarchar(20) | Default: 'User' | Vai trò (Admin/User) |
-
-#### **Books Table**
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| Id | int | PK, Identity | Khóa chính |
-| Title | nvarchar(200) | Not Null | Tên sách |
-| Author | nvarchar(100) | Not Null | Tác giả |
-| Category | nvarchar(50) | | Thể loại |
-| PublishYear | int | | Năm xuất bản |
-| Publisher | nvarchar(100) | | Nhà xuất bản |
-| TotalCopies | int | Default: 1 | Tổng số bản |
-| AvailableCopies | int | Default: 1 | Số bản có sẵn |
-
-#### **BorrowRecords Table**
-| Field | Type | Constraints | Description |
-|-------|------|-------------|-------------|
-| Id | int | PK, Identity | Khóa chính |
-| UserId | int | FK to Users | ID người mượn |
-| BookId | int | FK to Books | ID sách |
-| BorrowDate | datetime | Not Null | Ngày mượn |
-| DueDate | datetime | Not Null | Ngày hạn trả |
-| ReturnDate | datetime | Nullable | Ngày trả thực tế |
-| Status | nvarchar(20) | Default: 'Borrowed' | Trạng thái |
-
-## Hệ thống phân quyền
-
-### **Roles & Permissions**
-
-| Role | Permissions | Features Access |
-|------|-------------|----------------|
-| **Admin** | Full CRUD operations | • Quản lý sách<br>• Quản lý người dùng<br>• Xem báo cáo<br>• Quản lý mượn/trả |
-| **User** | Limited operations | • Xem danh sách sách<br>• Mượn sách<br>• Trả sách<br>• Xem lịch sử cá nhân |
 
 ### **Authentication Flow**
 ```
